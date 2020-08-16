@@ -2,13 +2,55 @@
 <html>
     <head>
         <link rel="stylesheet" href="styles.css">
-        <title>Calculator!</title>
+        <title>My Library</title>
     </head>
     <body>
-      
+      <header>
+        <h1>Your Books</h1>
+      </header>
+
+      <main>
+        <ul class="bookshelf">
+          
+        </ul>
+
+        <button id="btn-addBook">Add Book</button>
+      </main>
+     
     </body>
 
     <script>
-      
+      let myLibrary = [];
+
+      function Book(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+      }
+
+      function addBookToLibrary(book) {
+        myLibrary.push(book);
+      }
+
+      function render() {
+        const bookShelf = document.querySelector('.bookshelf');
+        for(let i = 0; i < myLibrary.length; i++) {
+          let book = document.createElement('li');
+          book.classList.add('book');
+          book.innerHTML = 
+            `<h3>${myLibrary[i].title}</h3>
+             <p>${myLibrary[i].author}</p>
+             <p>${myLibrary[i].pages}</p>
+             <p>${myLibrary[i].read}</p>`;
+          bookShelf.appendChild(book);
+        }
+      }
+
+      let testBook1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, false);
+      let testBook2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
+      addBookToLibrary(testBook1);
+      addBookToLibrary(testBook2);
+      render();
     </script>
 </html>
