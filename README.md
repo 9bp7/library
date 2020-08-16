@@ -1,0 +1,1 @@
+A small library app to practise using objects in JavaScript.
