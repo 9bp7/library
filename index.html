@@ -38,6 +38,7 @@
     <script>
       let myLibrary = [];
       const bookShelf = document.querySelector('.bookshelf');
+      const newBookBtn = document.querySelector('#btn-addBook');
 
       function Book(title, author, pages, read) {
         this.title = title;
@@ -50,7 +51,9 @@
         myLibrary.push(book);
       }
 
-      function render() {        
+      function render() {     
+        bookShelf.innerHTML = "";
+           
         for(let i = 0; i < myLibrary.length; i++) {
           let book = document.createElement('li');
           book.classList.add('book');
@@ -68,36 +71,62 @@
         }
       }
 
-      function renderNewBookCard() {
+      function toggleNewBookCard() {
         if(bookShelf.querySelector('.new-book')) {
-          return;
+          let newBookCard = bookShelf.querySelector('.new-book');
+          bookShelf.removeChild(newBookCard);
+          let newBookBtn = document.querySelector('#btn-addBook');
+          newBookBtn.classList.remove('no-show');
+        } else {
+          let book = document.createElement('li');
+          book.classList.add('book');
+          book.classList.add('new-book');
+          book.innerHTML = 
+            `<h3>Add new book</h3>
+             <form id="new-book-form">
+               <label for="title">Book Title: </label>
+               <input type="text" id="title">
+               <label for="author">Author: </label>
+               <input type="text" id="author">
+               <label for="pages">Pages: </label>
+               <input type="text" id="pages">
+               <label for="readornot">Read yet? </label>
+               <input type="checkbox" id="readornot">
+               <div class="form-buttons">
+                 <button type="submit" id="btn-newBook">Add Book</button>
+                 <button type="submit" id="btn-cancel">Cancel</button>
+               </div>
+             </form>`;             
+          bookShelf.appendChild(book);
+
+          let confirmNewBookBtn = document.querySelector('#btn-newBook');
+          let cancelNewBookBtn = document.querySelector('#btn-cancel');
+          confirmNewBookBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let newBook = new Book(document.querySelector("#title").value,
+                                   document.querySelector("#author").value,
+                                   document.querySelector("#pages").value,
+                                   document.querySelector("#readornot").value);
+            addBookToLibrary(newBook);
+            render();         
+            newBookBtn.classList.remove('no-show');  
+          });
+          cancelNewBookBtn.addEventListener('click', toggleNewBookCard);
+
+          newBookBtn.classList.add('no-show');
         }
-        
-        let book = document.createElement('li');
-        book.classList.add('book');
-        book.classList.add('new-book');
-        book.innerHTML = 
-          `<h3>Add new book</h3>
-           <form id="new-book-form">
-             <label for="title">Book Title: </label>
-             <input type="text" id="title">
-             <label for="author">Author: </label>
-             <input type="text" id="author">
-             <label for="pages">Pages: </label>
-             <input type="text" id="pages">
-             <label for="readornot">Read yet? </label>
-             <input type="checkbox" id="readornot">
-             <button type="submit">Add Book</button>
-           </form>`;
-             
-        bookShelf.appendChild(book);
       }
+
+      newBookBtn.addEventListener('click', toggleNewBookCard);
 
       let testBook1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let testBook2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
       addBookToLibrary(testBook1);
       addBookToLibrary(testBook2);
       render();
-      renderNewBookCard();
+
+      
+
+      
     </script>
 </html>

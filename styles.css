@@ -5,7 +5,7 @@
 
 body {
     width: 97%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 
     font-family: monospace;
@@ -30,6 +30,8 @@ header {
 
     padding: 30px;
     margin: 10px;
+
+    min-height: 300px;
 }
 
 h3,
@@ -84,7 +86,6 @@ p:not(:last-of-type) {
 }
 
 #new-book-form button[type="submit"] {
-    display: block;
     margin-top: 10px;
     color: #fff;
     background: #00b3ff;
@@ -92,4 +93,12 @@ p:not(:last-of-type) {
     border-radius: 50px;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+#new-book-form #btn-cancel {
+    background: #b51b21;
+}
+
+.no-show {
+    display: none;
 }
