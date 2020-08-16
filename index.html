@@ -11,16 +11,33 @@
 
       <main>
         <ul class="bookshelf">
-          
+          <!--<li class="book new-book">
+            <h3>Add new book</h3>
+            <form id="new-book-form">
+                <label for="title">Book Title: </label>
+                <input type="text" id="title">
+                <label for="author">Author: </label>
+                <input type="text" id="author">
+                <label for="pages">Pages: </label>
+                <input type="text" id="pages">
+                <label for="readornot">Read yet? </label>
+                <input type="checkbox" id="readornot">
+                <button type="submit">Add Book</button>
+            </form>
+          </li>-->
         </ul>
-
-        <button id="btn-addBook">Add Book</button>
+        
+        <div class="add-book">
+          <button id="btn-addBook">Add Book</button>
+        </div>
+        
       </main>
      
     </body>
 
     <script>
       let myLibrary = [];
+      const bookShelf = document.querySelector('.bookshelf');
 
       function Book(title, author, pages, read) {
         this.title = title;
@@ -33,24 +50,54 @@
         myLibrary.push(book);
       }
 
-      function render() {
-        const bookShelf = document.querySelector('.bookshelf');
+      function render() {        
         for(let i = 0; i < myLibrary.length; i++) {
           let book = document.createElement('li');
           book.classList.add('book');
           book.innerHTML = 
             `<h3>${myLibrary[i].title}</h3>
-             <p>${myLibrary[i].author}</p>
-             <p>${myLibrary[i].pages}</p>
-             <p>${myLibrary[i].read}</p>`;
+             <p>by ${myLibrary[i].author}</p>
+             <p>${myLibrary[i].pages} pages</p>`
+          if(myLibrary[i].read) {
+            book.innerHTML += `<p>Finished</p>`;
+          } else {
+            book.innerHTML += `<p>Not read yet</p>`;
+          }
+             
           bookShelf.appendChild(book);
         }
       }
 
-      let testBook1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, false);
+      function renderNewBookCard() {
+        if(bookShelf.querySelector('.new-book')) {
+          return;
+        }
+        
+        let book = document.createElement('li');
+        book.classList.add('book');
+        book.classList.add('new-book');
+        book.innerHTML = 
+          `<h3>Add new book</h3>
+           <form id="new-book-form">
+             <label for="title">Book Title: </label>
+             <input type="text" id="title">
+             <label for="author">Author: </label>
+             <input type="text" id="author">
+             <label for="pages">Pages: </label>
+             <input type="text" id="pages">
+             <label for="readornot">Read yet? </label>
+             <input type="checkbox" id="readornot">
+             <button type="submit">Add Book</button>
+           </form>`;
+             
+        bookShelf.appendChild(book);
+      }
+
+      let testBook1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let testBook2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
       addBookToLibrary(testBook1);
       addBookToLibrary(testBook2);
       render();
+      renderNewBookCard();
     </script>
 </html>
