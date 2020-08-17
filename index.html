@@ -243,22 +243,6 @@
         });
       }
 
-      function parentsContainClass(element, className) {
-        if (!element || element.length === 0) {
-          return false;
-        }
-        let parent = element;
-        do {
-          if (parent === document) {
-            break;
-          }
-          if (parent.classList.contains(className)) {
-            return parent;
-          }
-        } while (parent = parent.parentNode);
-        return false;
-      }
-
       let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
       let test3 = new Book("Atomic Habits: The life-changing million copy bestseller", "James Clear", 320, false);
