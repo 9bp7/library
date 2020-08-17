@@ -87,7 +87,7 @@
           book.classList.add('book');
           if(!myLibrary[i].editing) {
             book.innerHTML = 
-                `<p class="book-remove">❌</p>
+                `<p class="book-remove">❌ Delete</p>
                 <h3>${myLibrary[i].title}</h3>
                 <p>by <i>${myLibrary[i].author}</i></p>
                 <p>${myLibrary[i].pages} pages</p>`
@@ -201,7 +201,7 @@
       }  
 
       App.prototype.handleEditBookButtons = function(_this) {
-        // Handle confirm button
+        // Handle save button
         let saveEditBookBtn = document.querySelector('#btn-editBook-save');
         saveEditBookBtn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -212,19 +212,6 @@
           myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
           _this.render();
         });
-
-        /*let confirmNewBookBtn = document.querySelector('#btn-editBook-save');
-        confirmNewBookBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          let newBook = new Book(document.querySelector("#title").value,
-                                 document.querySelector("#author").value,
-                                 document.querySelector("#pages").value,
-                                 document.querySelector("#readornot").checked);
-          addBookToLibrary(newBook);
-          _this.addingNewBook = false;
-          _this.render();         
-          _this.newBookBtn.classList.remove('no-show');  
-        });*/
         
         // Handle cancel button
         let cancelEditBookBtn = document.querySelector('#btn-editBook-cancel');
