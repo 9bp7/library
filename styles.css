@@ -193,8 +193,16 @@ button:active {
 
 .grn {
     color: #085c1e;
+    border: 2px solid #085c1e;
+    border-radius: 10px;
+    margin: 15px auto 0 auto;
+    padding: 3px 6px;
 }
 
 .red {
     color: #61200d;
+    border: 2px solid #61200d;
+    border-radius: 10px;
+    margin: 15px auto 0 auto;
+    padding: 3px 6px;
 }

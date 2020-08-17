@@ -94,9 +94,9 @@
                 <p>by <i>${myLibrary[i].author}</i></p>
                 <p>${myLibrary[i].pages} pages</p>`
             if(myLibrary[i].read) {
-                book.innerHTML += `<p class="grn">Read</p>`;
+                book.innerHTML += `<span class="grn">Read</span>`;
             } else {
-                book.innerHTML += `<p class="red">Not read yet</p>`;
+                book.innerHTML += `<span class="red">Not read yet</span>`;
             }
             book.innerHTML += `<button class="book-edit no-show">Edit</button>`;
           } else {
@@ -162,6 +162,7 @@
         let newBookCard = document.createElement('li');
         newBookCard.classList.add('book');
         newBookCard.classList.add('new-book');
+        newBookCard.classList.add('book-center');
         newBookCard.innerHTML = 
             `<h3>Add new book</h3>
              <form id="new-book-form">
