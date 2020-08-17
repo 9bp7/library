@@ -51,7 +51,7 @@ header {
     width: 300px;
     margin-left: -150px;
     justify-content: center;
-    box-shadow: 0 0 400px 72px #4c00ff;
+    box-shadow: 0 0 400px 72px #008cff;
 }
 
 @keyframes animateShadow {
