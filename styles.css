@@ -9,8 +9,6 @@ body {
     margin: 0 auto 30px auto;
 
     font-family: monospace;
-
-    
 }
 
 header {
@@ -19,6 +17,7 @@ header {
 }
 
 .bookshelf {
+    padding: 0;
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));    
@@ -31,7 +30,7 @@ header {
     padding: 30px;
     margin: 10px;
 
-    min-height: 380px;
+    min-height: 300px;
 
     position: relative;
 }
@@ -105,7 +104,12 @@ p:not(:last-of-type) {
     border: 1px solid lightgray;
     border-radius: 5px;
     padding: 0 10px;
-    font-family: monospace;
+}
+
+#new-book-form input[type="checkbox"] {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
 }
 
 #new-book-form label[for="readornot"] {
@@ -139,6 +143,7 @@ p:not(:last-of-type) {
 
 button {
     transition: 0.2s;
+    font-family: monospace;
 }
 
 button:hover {
