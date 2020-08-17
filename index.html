@@ -62,7 +62,11 @@
       }
 
       function loadLibrary() {
-        myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
+        if(localStorage.getItem('myLibrary') !== null) {
+          myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
+        } else {
+          myLibrary = [];
+        }        
       }
 
 
