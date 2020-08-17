@@ -44,16 +44,14 @@ header {
 
 .book.new-book.book-center,
 .book.new-book.book-center:hover {
-    position: absolute;
-    top: 50px;
+    position: fixed;
+    top: 10vh;
     left: 50%;
     right: 50%;
     width: 300px;
     margin-left: -150px;
     justify-content: center;
-    animation: animateShadow 10s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+    box-shadow: 0 0 400px 72px #4c00ff;
 }
 
 @keyframes animateShadow {
