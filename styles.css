@@ -20,7 +20,7 @@ header {
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));    
+    grid-template-columns: repeat(4, minmax(0, 1fr));    
 }
 
 .book {
@@ -33,6 +33,12 @@ header {
     min-height: 300px;
 
     position: relative;
+}
+
+.book:hover .book-edit.no-show,
+.book:hover .book-remove.no-show {
+    display: block;
+    transition: 0.2s;
 }
 
 .book-remove {

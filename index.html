@@ -7,6 +7,7 @@
     <body>
       <header>
         <h1>Your Library</h1>
+        <p>Hover over books to edit or remove from library</p>
       </header>
 
       <main>
@@ -87,7 +88,7 @@
           book.classList.add('book');
           if(!myLibrary[i].editing) {
             book.innerHTML = 
-                `<p class="book-remove ${myLibrary[i].hovering ? "" : "no-show"}">Remove from Library</p>
+                `<p class="book-remove ${myLibrary[i].hovering ? "" : "no-show"}">Remove</p>
                 <h3>${myLibrary[i].title}</h3>
                 <p>by <i>${myLibrary[i].author}</i></p>
                 <p>${myLibrary[i].pages} pages</p>`
@@ -242,41 +243,21 @@
         });
       }
 
-      App.prototype.trackMouseOvers = function() {       
-        _this = this;
-
-        let cards = this.bookShelf.querySelectorAll(".book");
-        cards.forEach(card => {
-          card.addEventListener('mouseover', (e) => {
-            let bookID = 0;
-            if(e.target.classList.contains('book')) {
-              bookID = +e.target.getAttribute('data-id');
-            } else if(e.target.parentElement.classList.contains('book')) {
-              bookID = +e.target.parentElement.getAttribute('data-id');
-            }          
-
-            if(myLibrary[bookID].hovering !== true) {
-              myLibrary[bookID].hovering = true;
-              _this.render();
-              
-
-              console.log("rendered");
-            }
-
-            _this.trackMouseOvers();
-          })
-        });
-
-        let background = document.querySelector('main');
-        background.addEventListener('mouseover', () => {
-          myLibrary.forEach(book => {
-            book.hovering = false;
-          });
-        });
+      function parentsContainClass(element, className) {
+        if (!element || element.length === 0) {
+          return false;
+        }
+        let parent = element;
+        do {
+          if (parent === document) {
+            break;
+          }
+          if (parent.classList.contains(className)) {
+            return parent;
+          }
+        } while (parent = parent.parentNode);
+        return false;
       }
-
-
-
 
       let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
@@ -292,8 +273,6 @@
       app.render();
       app.newBookButtonEvent();
       app.editButtonEvent();
-      app.trackMouseOvers();
-      
 
       
     </script>
