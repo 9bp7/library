@@ -21,22 +21,53 @@ header {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));    
+
+    position: relative;
 }
 
 .book {
-    background: #fbf6e6;
-    border-left: 5px solid #dbd2c9;
+    background: rgb(251,246,230);
+    background: linear-gradient(270deg, rgba(251,246,230,1) 0%, rgba(233,224,209,1) 100%); 
+    border-left: 7px solid #ab987e;
 
     transform: rotateX(-8deg) rotateY(25deg) rotateZ(0deg);
 
     padding: 30px;
-    margin: 10px;
+    margin: 10px 10px;
 
     min-height: 400px;
 
     transition: 0.4s;
 
     position: relative;
+}
+
+.book.new-book.book-center,
+.book.new-book.book-center:hover {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    right: 50%;
+    width: 300px;
+    margin-left: -150px;
+    justify-content: center;
+    animation: animateShadow 10s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes animateShadow {
+    0% {
+        box-shadow: 0 0 200px 20px #0064cf;
+    }
+
+    50% {
+        box-shadow: 0 0 200px 20px #7232d9;
+    }
+
+    100% {
+        box-shadow: 0 0 200px 20px #d9326c;   
+    }
 }
 
 .book.new-book.book-center,
@@ -102,6 +133,17 @@ header {
 
 .book.book-center:hover {
     box-shadow: 0 0 24px 4px #dedede;
+}
+
+
+
+.shelf {
+    grid-column: 1 / -1; 
+    height: 40px;
+    background: rgb(140,120,91);
+    background: linear-gradient(180deg, rgba(140,120,91,1) 0%, rgba(140,120,91,1) 13%, rgba(121,93,52,1) 24%, rgba(140,120,91,1) 37%, rgba(140,120,91,1) 42%, rgba(121,93,52,1) 59%, rgba(140,120,91,1) 63%, rgba(140,120,91,1) 72%, rgba(121,93,52,1) 82%, rgba(140,120,91,1) 91%); 
+    margin-top: -35px;
+    margin-bottom: 20px;
 }
 
 main {

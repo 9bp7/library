@@ -83,6 +83,11 @@
             _this.bookShelf.removeChild(book);
           }
         });
+
+        let shelves = this.bookShelf.querySelectorAll(".shelf");
+        shelves.forEach(shelf => {
+          _this.bookShelf.removeChild(shelf);
+        });
       }
 
       App.prototype.render = function() {
@@ -123,6 +128,19 @@
                  <button type="submit" id="btn-editBook-cancel">Cancel</button>
                </div>
              </form>`;
+          }
+
+          let shelf = document.createElement('li');
+          shelf.classList.add('shelf');
+          if(i === myLibrary.length - 1 && (myLibrary.length % 5) === 0) {
+            console.log("Add shelf to end at " + i);
+            this.bookShelf.prepend(shelf);
+          } else if(i === myLibrary.length - 1 && (myLibrary.length % 5) !== 0) {
+            console.log("Add extra shelf to end at " + i);
+            this.bookShelf.prepend(shelf);    
+          } else if((i + 1) % 5 === 0 && i > 0) {
+            console.log("Add divisible by 5 shelf at " + i);
+            this.bookShelf.prepend(shelf);  
           }
           
           this.bookShelf.prepend(book);
@@ -275,11 +293,25 @@
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
       let test3 = new Book("Atomic Habits", "James Clear", 320, false);
       let test4 = new Book("Not a Diet Book", "James Smith", 304, true);
+      let test5 = new Book("A Big Fat Test Book", "Richard Fry", 134, true);
+      let test6 = new Book("The Biggest Test", "Mr T", 205, false);
+      let test7 = new Book("The Biggest Test", "Mr T", 205, false);
+      let test8 = new Book("The Biggest Test", "Mr T", 205, false);
+      let test9 = new Book("The Biggest Test", "Mr T", 205, false);
+      let test10 = new Book("The Biggest Test", "Mr T", 205, false);
+      let test11 = new Book("The Biggest Test", "Mr T", 205, false);
       
       addBookToLibrary(test1);
       addBookToLibrary(test2);
       addBookToLibrary(test3);
       addBookToLibrary(test4);
+      addBookToLibrary(test5);
+      addBookToLibrary(test6);
+      addBookToLibrary(test7);
+      //addBookToLibrary(test8);
+      //addBookToLibrary(test9);
+      //addBookToLibrary(test10);
+      addBookToLibrary(test11);
 
       let app = new App();
       app.init();
