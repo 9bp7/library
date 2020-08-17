@@ -57,6 +57,13 @@
         myLibrary.splice(index, 1);
       }
 
+      function saveLibrary() {
+        localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+      }
+
+      function loadLibrary() {
+        myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
+      }
 
 
       function App() {
@@ -149,6 +156,7 @@
         this.editButtonEvent();
         this.removeBookButtonEvent();
         this.updateBookCount();
+        saveLibrary();
       }
 
       App.prototype.validateBook = function(_this, book) {
@@ -312,9 +320,10 @@
       addBookToLibrary(test9);
       addBookToLibrary(test10);
       addBookToLibrary(test11);
-
+      
+      loadLibrary();
       let app = new App();
-      app.init();
+      app.init();      
       app.render();
       app.newBookButtonEvent();
       app.editButtonEvent();
