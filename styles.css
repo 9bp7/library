@@ -54,20 +54,6 @@ header {
     box-shadow: 0 0 200px 25px #6a6a6a;
 }
 
-@keyframes animateShadow {
-    0% {
-        box-shadow: 0 0 200px 20px #0064cf;
-    }
-
-    50% {
-        box-shadow: 0 0 200px 20px #7232d9;
-    }
-
-    100% {
-        box-shadow: 0 0 200px 20px #d9326c;   
-    }
-}
-
 .book.new-book.book-center,
 .book-editing,
 .book:hover {
