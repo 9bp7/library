@@ -70,7 +70,7 @@
         _this = this;
         let booksExclNewBookCard = this.bookShelf.querySelectorAll(".book");
         booksExclNewBookCard.forEach(book => {
-          if(!book.classList.contains("new-book")) {
+          if(!book.classList.contains("new-book") || (book.classList.contains("new-book") && !_this.addingNewBook)) {
             _this.bookShelf.removeChild(book);
           }
         });
@@ -111,6 +111,7 @@
                                  document.querySelector("#pages").value,
                                  document.querySelector("#readornot").checked);
           addBookToLibrary(newBook);
+          _this.addingNewBook = false;
           _this.render();         
           _this.newBookBtn.classList.remove('no-show');  
         });
@@ -141,9 +142,8 @@
                </div>
              </form>`;
         _this.bookShelf.appendChild(newBookCard);
-
         _this.newBookBtn.classList.add('no-show');
-
+        _this.addingNewBook = true;
         _this.handleNewBookCardButtons(_this);
       }
 
@@ -151,6 +151,7 @@
         let newBookCard = _this.bookShelf.querySelector('.new-book');
         _this.bookShelf.removeChild(newBookCard);
         _this.newBookBtn.classList.remove('no-show');
+        _this.addingNewBook = false;
       }
 
       App.prototype.toggleNewBookCard = function(_this) {
