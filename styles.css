@@ -93,7 +93,8 @@ p:not(:last-of-type) {
     display: inline;
 }
 
-#new-book-form #readornot {
+#new-book-form #readornot,
+#new-book-form #edit-readornot {
     width: auto;
     display: inline-block;
 }
@@ -108,7 +109,8 @@ p:not(:last-of-type) {
     cursor: pointer;
 }
 
-#new-book-form #btn-cancel {
+#new-book-form #btn-cancel,
+#new-book-form #btn-editBook-cancel {
     background: #b51b21;
 }
 

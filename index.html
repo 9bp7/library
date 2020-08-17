@@ -43,6 +43,7 @@
         this.author = author;
         this.pages = pages;
         this.read = read;
+        this.editing = false;
       }
 
       function addBookToLibrary(book) {
@@ -84,20 +85,41 @@
           let book = document.createElement('li');
           book.setAttribute('data-id', i);
           book.classList.add('book');
-          book.innerHTML = 
-              `<p class="book-remove">❌</p>
-              <h3>${myLibrary[i].title}</h3>
-              <p>by <i>${myLibrary[i].author}</i></p>
-              <p>${myLibrary[i].pages} pages</p>`
-          if(myLibrary[i].read) {
-              book.innerHTML += `<p>Finished</p>`;
+          if(!myLibrary[i].editing) {
+            book.innerHTML = 
+                `<p class="book-remove">❌</p>
+                <h3>${myLibrary[i].title}</h3>
+                <p>by <i>${myLibrary[i].author}</i></p>
+                <p>${myLibrary[i].pages} pages</p>`
+            if(myLibrary[i].read) {
+                book.innerHTML += `<p>Finished</p>`;
+            } else {
+                book.innerHTML += `<p>Not read yet</p>`;
+            }
+            book.innerHTML += `<button class="book-edit">Edit</button>`;
           } else {
-              book.innerHTML += `<p>Not read yet</p>`;
+            book.innerHTML = 
+            `<h3>Edit book</h3>
+             <form id="new-book-form">
+               <label for="title">Book Title: </label>
+               <input type="text" id="edit-title" value="${myLibrary[i].title}">
+               <label for="author">Author: </label>
+               <input type="text" id="edit-author" value="${myLibrary[i].author}">
+               <label for="pages">Pages: </label>
+               <input type="text" id="edit-pages" value="${myLibrary[i].pages}">
+               <label for="readornot">Read yet? </label>
+               <input type="checkbox" id="edit-readornot" ${myLibrary[i].read ? "checked" : ""}>
+               <div class="form-buttons">
+                 <button type="submit" id="btn-editBook-save">Save Changes</button>
+                 <button type="submit" id="btn-editBook-cancel">Cancel</button>
+               </div>
+             </form>`;
           }
           
           this.bookShelf.prepend(book);
         }
 
+        this.editButtonEvent();
         this.removeBookButtonEvent();
       }
 
@@ -172,12 +194,66 @@
         _this = this;
         removeBookButtons.forEach(button => {
           button.addEventListener('click', (e) => {
-            console.log(e.target.parentElement.getAttribute('data-id'))
             removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
             _this.render();
           });
         });
-      }      
+      }  
+
+      App.prototype.handleEditBookButtons = function(_this) {
+        // Handle confirm button
+        let saveEditBookBtn = document.querySelector('#btn-editBook-save');
+        saveEditBookBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].title = document.querySelector("#edit-title").value;
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].author = document.querySelector("#edit-author").value;
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].pages = document.querySelector("#edit-pages").value;
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].read = document.querySelector("#edit-readornot").checked;
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
+          _this.render();
+        });
+
+        /*let confirmNewBookBtn = document.querySelector('#btn-editBook-save');
+        confirmNewBookBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          let newBook = new Book(document.querySelector("#title").value,
+                                 document.querySelector("#author").value,
+                                 document.querySelector("#pages").value,
+                                 document.querySelector("#readornot").checked);
+          addBookToLibrary(newBook);
+          _this.addingNewBook = false;
+          _this.render();         
+          _this.newBookBtn.classList.remove('no-show');  
+        });*/
+        
+        // Handle cancel button
+        let cancelEditBookBtn = document.querySelector('#btn-editBook-cancel');
+        cancelEditBookBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
+          _this.render();
+        }); 
+      }    
+
+      App.prototype.editButtonEvent = function() {
+        let editBookButtons = this.bookShelf.querySelectorAll(".book-edit");
+        _this = this;
+        editBookButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            let i = 0;
+            myLibrary.forEach(book => {
+              if(i === +e.target.parentElement.getAttribute('data-id')) {
+                myLibrary[i].editing = true;
+              } else {
+                myLibrary[i].editing = false;
+              }
+              i++;
+            });
+            _this.render();
+            _this.handleEditBookButtons(_this);
+          });
+        });
+      }
 
 
 
@@ -195,6 +271,7 @@
       app.init();
       app.render();
       app.newBookButtonEvent();
+      app.editButtonEvent();
       
 
       
