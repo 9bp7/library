@@ -2,11 +2,11 @@
 <html>
     <head>
         <link rel="stylesheet" href="styles.css">
-        <title>My Library</title>
+        <title>Your Library</title>
     </head>
     <body>
       <header>
-        <h1>Your Books</h1>
+        <h1>Your Library</h1>
       </header>
 
       <main>
@@ -49,11 +49,16 @@
         myLibrary.push(book);
       }
 
+      function removeBookFromLibrary(index) {
+        myLibrary.splice(index, 1);
+      }
+
 
 
       function App() {
         bookShelf = null;
         newBookBtn = null;
+        addingNewBook = false;
       }
 
       App.prototype.init = function() {
@@ -62,17 +67,26 @@
       }
 
       App.prototype.clearBookshelf = function() {
-        this.bookShelf.innerHTML = "";
+        _this = this;
+        let booksExclNewBookCard = this.bookShelf.querySelectorAll(".book");
+        booksExclNewBookCard.forEach(book => {
+          if(!book.classList.contains("new-book")) {
+            _this.bookShelf.removeChild(book);
+          }
+        });
       }
 
       App.prototype.render = function() {
         this.clearBookshelf();
 
-        for(let i = 0; i < myLibrary.length; i++) {
+        let booksToAdd = [];
+        for(let i = myLibrary.length - 1; i >= 0; i--) {
           let book = document.createElement('li');
+          book.setAttribute('data-id', i);
           book.classList.add('book');
           book.innerHTML = 
-              `<h3>${myLibrary[i].title}</h3>
+              `<p class="book-remove">❌</p>
+              <h3>${myLibrary[i].title}</h3>
               <p>by ${myLibrary[i].author}</p>
               <p>${myLibrary[i].pages} pages</p>`
           if(myLibrary[i].read) {
@@ -80,9 +94,11 @@
           } else {
               book.innerHTML += `<p>Not read yet</p>`;
           }
-            
-          this.bookShelf.appendChild(book);
+          
+          this.bookShelf.prepend(book);
         }
+
+        this.removeBookButtonEvent();
       }
 
       App.prototype.handleNewBookCardButtons = function(_this) {
@@ -150,6 +166,18 @@
         _this.newBookBtn.addEventListener('click', () => _this.toggleNewBookCard(_this));   
       }      
 
+      App.prototype.removeBookButtonEvent = function() {
+        let removeBookButtons = this.bookShelf.querySelectorAll(".book-remove");
+        _this = this;
+        removeBookButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            console.log(e.target.parentElement.getAttribute('data-id'))
+            removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
+            _this.render();
+          });
+        });
+      }      
+
 
 
 
@@ -162,6 +190,7 @@
       app.init();
       app.render();
       app.newBookButtonEvent();
+      
 
       
     </script>
