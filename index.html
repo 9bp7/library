@@ -104,11 +104,11 @@
             `<h3>Edit book</h3>
              <form id="new-book-form">
                <label for="title">Book Title: </label>
-               <input type="text" id="edit-title" value="${myLibrary[i].title}">
+               <input type="text" id="edit-title" value="${myLibrary[i].title}" required>
                <label for="author">Author: </label>
-               <input type="text" id="edit-author" value="${myLibrary[i].author}">
+               <input type="text" id="edit-author" value="${myLibrary[i].author}" required>
                <label for="pages">Pages: </label>
-               <input type="text" id="edit-pages" value="${myLibrary[i].pages}">
+               <input type="number" id="edit-pages" value="${myLibrary[i].pages}" required>
                <label for="readornot">Read yet? </label>
                <input type="checkbox" id="edit-readornot" ${myLibrary[i].read ? "checked" : ""}>
                <div class="form-buttons">
@@ -125,6 +125,17 @@
         this.removeBookButtonEvent();
       }
 
+      App.prototype.validateBook = function(_this, book) {
+          if(book.title && book.title.length > 0) {
+            if(book.author && book.author.length > 0) {
+              if(book.pages && +book.pages >= 0) {
+                return true;
+              }
+            }
+          }
+          return false;
+      }
+
       App.prototype.handleNewBookCardButtons = function(_this) {
         // Handle confirm button
         let confirmNewBookBtn = document.querySelector('#btn-newBook');
@@ -133,11 +144,13 @@
           let newBook = new Book(document.querySelector("#title").value,
                                  document.querySelector("#author").value,
                                  document.querySelector("#pages").value,
-                                 document.querySelector("#readornot").checked);
-          addBookToLibrary(newBook);
-          _this.addingNewBook = false;
-          _this.render();         
-          _this.newBookBtn.classList.remove('no-show');  
+                                 document.querySelector("#readornot").checked);                                 
+          if(_this.validateBook(_this, newBook)) {
+            addBookToLibrary(newBook);
+            _this.addingNewBook = false;
+            _this.render();         
+            _this.newBookBtn.classList.remove('no-show');  
+          }          
         });
         
         // Handle cancel button
@@ -153,11 +166,11 @@
             `<h3>Add new book</h3>
              <form id="new-book-form">
                <label for="title">Book Title: </label>
-               <input type="text" id="title">
+               <input type="text" id="title" value="" required>
                <label for="author">Author: </label>
-               <input type="text" id="author">
+               <input type="text" id="author" value="" required>
                <label for="pages">Pages: </label>
-               <input type="text" id="pages">
+               <input type="number" id="pages" value="" required>
                <label for="readornot">Read yet? </label>
                <input type="checkbox" id="readornot">
                <div class="form-buttons">
@@ -207,12 +220,17 @@
         let saveEditBookBtn = document.querySelector('#btn-editBook-save');
         saveEditBookBtn.addEventListener('click', function(e) {
           e.preventDefault();
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].title = document.querySelector("#edit-title").value;
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].author = document.querySelector("#edit-author").value;
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].pages = document.querySelector("#edit-pages").value;
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].read = document.querySelector("#edit-readornot").checked;
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
-          _this.render();
+          let newBook = new Book(document.querySelector("#edit-title").value,
+                                 document.querySelector("#edit-author").value,
+                                 document.querySelector("#edit-pages").value,
+                                 document.querySelector("#edit-readornot").checked);
+          newBook.editing = false; 
+
+          if(_this.validateBook(_this, newBook)) {
+            myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')] = newBook;
+            _this.render();
+          }
+          
         });
         
         // Handle cancel button
