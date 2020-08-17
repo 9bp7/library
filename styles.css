@@ -27,18 +27,28 @@ header {
     background: #fbf6e6;
     border-left: 5px solid #dbd2c9;
 
+    transform: rotateX(-8deg) rotateY(25deg) rotateZ(0deg);
+
     padding: 30px;
     margin: 10px;
 
-    min-height: 300px;
+    min-height: 400px;
+
+    transition: 0.4s;
 
     position: relative;
+}
+
+.book.new-book.book-center,
+.book-editing,
+.book:hover {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
 }
 
 .book:hover .book-edit.no-show,
 .book:hover .book-remove.no-show {
     display: block;
-    transition: 0.2s;
+    transition: 0.4s;
 }
 
 .book-center {
@@ -88,6 +98,14 @@ header {
     opacity: 0;
     animation: fadeIn 0.4s;
     animation-fill-mode: forwards;
+}
+
+.book.book-center:hover {
+    box-shadow: 0 0 24px 4px #dedede;
+}
+
+main {
+    margin-top: 40px;
 }
 
 h3,
@@ -205,4 +223,10 @@ button:active {
     border-radius: 10px;
     margin: 15px auto 0 auto;
     padding: 3px 6px;
+}
+
+#book-count {
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 20px;
 }

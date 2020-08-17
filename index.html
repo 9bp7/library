@@ -7,6 +7,7 @@
     <body>
       <header>
         <h1>Your Library</h1>
+        <p id="book-count">0 Books</p>
         <p>Hover over books to edit or remove from library</p>
       </header>
 
@@ -69,6 +70,11 @@
           this.newBookBtn = document.querySelector('#btn-addBook');
       }
 
+      App.prototype.updateBookCount = function() {
+          let bookCount = document.querySelector('#book-count');
+          bookCount.textContent = `${myLibrary.length} Books`;
+      }
+
       App.prototype.clearBookshelf = function() {
         _this = this;
         let booksExclNewBookCard = this.bookShelf.querySelectorAll(".book");
@@ -89,17 +95,18 @@
           book.classList.add('book-center');
           if(!myLibrary[i].editing) {
             book.innerHTML = 
-                `<p class="book-remove ${myLibrary[i].hovering ? "" : "no-show"}">Remove</p>
+                `<p class="book-remove no-show">Remove</p>
                 <h3>${myLibrary[i].title}</h3>
                 <p>by <i>${myLibrary[i].author}</i></p>
-                <p>${myLibrary[i].pages} pages</p>`
+                <p>${myLibrary[i].pages} pages</p>`;
             if(myLibrary[i].read) {
-                book.innerHTML += `<span class="grn">Read</span>`;
+                book.innerHTML += `<span class="grn">Read ✅</span>`;
             } else {
-                book.innerHTML += `<span class="red">Not read yet</span>`;
+                book.innerHTML += `<span class="red">Not read yet ❌</span>`;
             }
             book.innerHTML += `<button class="book-edit no-show">Edit</button>`;
           } else {
+            book.classList.add('book-editing');              
             book.innerHTML = 
             `<h3>Edit book</h3>
              <form id="new-book-form">
@@ -123,6 +130,7 @@
 
         this.editButtonEvent();
         this.removeBookButtonEvent();
+        this.updateBookCount();
       }
 
       App.prototype.validateBook = function(_this, book) {
@@ -251,7 +259,7 @@
             let i = 0;
             myLibrary.forEach(book => {
               if(i === +e.target.parentElement.getAttribute('data-id')) {
-                myLibrary[i].editing = true;
+                myLibrary[i].editing = true;                                
               } else {
                 myLibrary[i].editing = false;
               }
@@ -265,8 +273,9 @@
 
       let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
-      let test3 = new Book("Atomic Habits: The life-changing million copy bestseller", "James Clear", 320, false);
-      let test4 = new Book("Not a Diet Book: Take Control. Gain Confidence. Change Your Life.", "James Smith", 304, true);
+      let test3 = new Book("Atomic Habits", "James Clear", 320, false);
+      let test4 = new Book("Not a Diet Book", "James Smith", 304, true);
+      
       addBookToLibrary(test1);
       addBookToLibrary(test2);
       addBookToLibrary(test3);
