@@ -87,7 +87,7 @@
           book.innerHTML = 
               `<p class="book-remove">❌</p>
               <h3>${myLibrary[i].title}</h3>
-              <p>by ${myLibrary[i].author}</p>
+              <p>by <i>${myLibrary[i].author}</i></p>
               <p>${myLibrary[i].pages} pages</p>`
           if(myLibrary[i].read) {
               book.innerHTML += `<p>Finished</p>`;
@@ -181,10 +181,14 @@
 
 
 
-      let testBook1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
-      let testBook2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
-      addBookToLibrary(testBook1);
-      addBookToLibrary(testBook2);
+      let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
+      let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
+      let test3 = new Book("Atomic Habits: The life-changing million copy bestseller", "James Clear", 320, false);
+      let test4 = new Book("Not a Diet Book: Take Control. Gain Confidence. Change Your Life.", "James Smith", 304, true);
+      addBookToLibrary(test1);
+      addBookToLibrary(test2);
+      addBookToLibrary(test3);
+      addBookToLibrary(test4);
 
       let app = new App();
       app.init();
