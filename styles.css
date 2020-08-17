@@ -20,12 +20,12 @@ header {
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));    
+    grid-template-columns: repeat(5, minmax(0, 1fr));    
 }
 
 .book {
-    background: #f7f7f7;
-    border-bottom: 2px solid #ebebeb;
+    background: #fbf6e6;
+    border-left: 5px solid #dbd2c9;
 
     padding: 30px;
     margin: 10px;
@@ -41,6 +41,20 @@ header {
     transition: 0.2s;
 }
 
+.book-center {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    text-align: center;
+}
+
+.book-center h3,
+.book-center p {
+    flex-basis: 100%;
+    line-height: 1.5;
+    word-wrap: anywhere;
+}
+
 .book-remove {
     color: red;
     position: absolute;
@@ -49,6 +63,10 @@ header {
     padding: 5px;
 
     cursor: pointer;
+
+    opacity: 0;
+    animation: fadeIn 0.4s;
+    animation-fill-mode: forwards;
 }
 
 .book-remove:hover {
@@ -67,7 +85,9 @@ header {
     padding: 5px 10px;
     cursor: pointer;
 
-    font-family: monospace;
+    opacity: 0;
+    animation: fadeIn 0.4s;
+    animation-fill-mode: forwards;
 }
 
 h3,
@@ -145,6 +165,16 @@ p:not(:last-of-type) {
 
 .no-show {
     display: none;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 button {
