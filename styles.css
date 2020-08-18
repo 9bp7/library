@@ -66,6 +66,20 @@ header {
     transition: 0.4s;
 }
 
+.book.book.new-book.book-center {
+    animation: flyIn 0.5s;
+}
+
+@keyframes flyIn {
+    0% {
+      transform: rotateZ(-180deg) scale(0.1);
+    }
+
+    100% {
+        transform: rotateZ(0deg) scale(1);
+    }
+}
+
 .book-center {
     display: flex;
     flex-wrap: wrap;
