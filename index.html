@@ -70,233 +70,231 @@
       }
 
 
-      function App() {
+      class App {
         bookShelf = null;
         newBookBtn = null;
         addingNewBook = false;
-      }
 
-      App.prototype.init = function() {
+        constructor() {
           this.bookShelf = document.querySelector('.bookshelf');
           this.newBookBtn = document.querySelector('#btn-addBook');
-      }
+        }
 
-      App.prototype.updateBookCount = function() {
+        updateBookCount() {
           let bookCount = document.querySelector('#book-count');
           bookCount.textContent = `${myLibrary.length} Books`;
-      }
-
-      App.prototype.clearBookshelf = function() {
-        _this = this;
-        let booksExclNewBookCard = this.bookShelf.querySelectorAll(".book");
-        booksExclNewBookCard.forEach(book => {
-          if(!book.classList.contains("new-book") || (book.classList.contains("new-book") && !_this.addingNewBook)) {
-            _this.bookShelf.removeChild(book);
-          }
-        });
-
-        let shelves = this.bookShelf.querySelectorAll(".shelf");
-        shelves.forEach(shelf => {
-          _this.bookShelf.removeChild(shelf);
-        });
-      }
-
-      App.prototype.render = function() {
-        this.clearBookshelf();
-
-        for(let i = myLibrary.length - 1; i >= 0; i--) {
-          let book = document.createElement('li');
-          book.setAttribute('data-id', i);
-          book.classList.add('book');
-          book.classList.add('book-center');
-          if(!myLibrary[i].editing) {
-            book.innerHTML = 
-                `<p class="book-remove no-show">Remove</p>
-                <h3>${myLibrary[i].title}</h3>
-                <p>by <i>${myLibrary[i].author}</i></p>
-                <p>${myLibrary[i].pages} pages</p>`;
-            if(myLibrary[i].read) {
-                book.innerHTML += `<span class="grn">Read ✅</span>`;
-            } else {
-                book.innerHTML += `<span class="red">Not read yet ❌</span>`;
-            }
-            book.innerHTML += `<button class="book-edit no-show">Edit</button>`;
-          } else {
-            book.classList.add('book-editing');              
-            book.innerHTML = 
-            `<h3>Edit book</h3>
-             <form id="new-book-form">
-               <label for="title">Book Title: </label>
-               <input type="text" id="edit-title" value="${myLibrary[i].title}" required>
-               <label for="author">Author: </label>
-               <input type="text" id="edit-author" value="${myLibrary[i].author}" required>
-               <label for="pages">Pages: </label>
-               <input type="number" id="edit-pages" value="${myLibrary[i].pages}" required>
-               <label for="readornot">Read yet? </label>
-               <input type="checkbox" id="edit-readornot" ${myLibrary[i].read ? "checked" : ""}>
-               <div class="form-buttons">
-                 <button type="submit" id="btn-editBook-save">Save</button>
-                 <button type="submit" id="btn-editBook-cancel">Cancel</button>
-               </div>
-             </form>`;
-          }
-
-          let shelf = document.createElement('li');
-          shelf.classList.add('shelf');
-          if(i === myLibrary.length - 1 && (myLibrary.length % 5) === 0) {
-            this.bookShelf.prepend(shelf);
-          } else if(i === myLibrary.length - 1 && (myLibrary.length % 5) !== 0) {
-            this.bookShelf.prepend(shelf);    
-          } else if((i + 1) % 5 === 0 && i > 0) {
-            this.bookShelf.prepend(shelf);  
-          }
-          
-          this.bookShelf.prepend(book);
         }
 
-        this.editButtonEvent();
-        this.removeBookButtonEvent();
-        this.updateBookCount();
-        saveLibrary();
-      }
-
-      App.prototype.validateBook = function(_this, book) {
-          if(book.title && book.title.length > 0) {
-            if(book.author && book.author.length > 0) {
-              if(book.pages && +book.pages >= 0) {
-                return true;
-              }
+        clearBookShelf() {
+          let booksExclNewBookCard = this.bookShelf.querySelectorAll(".book");
+          booksExclNewBookCard.forEach(book => {
+            if(!book.classList.contains("new-book") || (book.classList.contains("new-book") && !this.addingNewBook)) {
+              this.bookShelf.removeChild(book);
             }
-          }
-          return false;
-      }
-
-      App.prototype.handleNewBookCardButtons = function(_this) {
-        // Handle confirm button
-        let confirmNewBookBtn = document.querySelector('#btn-newBook');
-        confirmNewBookBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          let newBook = new Book(document.querySelector("#title").value,
-                                 document.querySelector("#author").value,
-                                 document.querySelector("#pages").value,
-                                 document.querySelector("#readornot").checked);                                 
-          if(_this.validateBook(_this, newBook)) {
-            addBookToLibrary(newBook);
-            _this.addingNewBook = false;
-            _this.render();         
-            _this.newBookBtn.classList.remove('no-show');  
-          }          
-        });
-        
-        // Handle cancel button
-        let cancelNewBookBtn = document.querySelector('#btn-cancel');
-        cancelNewBookBtn.addEventListener('click', () => _this.toggleNewBookCard(_this)); 
-      }
-
-      App.prototype.showNewBookCard = function(_this) {
-        let newBookCard = document.createElement('li');
-        newBookCard.classList.add('book');
-        newBookCard.classList.add('new-book');
-        newBookCard.classList.add('book-center');
-        newBookCard.innerHTML = 
-            `<h3>Add new book</h3>
-             <form id="new-book-form">
-               <label for="title">Book Title: </label>
-               <input type="text" id="title" value="" required>
-               <label for="author">Author: </label>
-               <input type="text" id="author" value="" required>
-               <label for="pages">Pages: </label>
-               <input type="number" id="pages" value="" required>
-               <label for="readornot">Read yet? </label>
-               <input type="checkbox" id="readornot">
-               <div class="form-buttons">
-                 <button type="submit" id="btn-newBook">Add</button>
-                 <button type="submit" id="btn-cancel">Cancel</button>
-               </div>
-             </form>`;
-        _this.bookShelf.appendChild(newBookCard);
-        _this.newBookBtn.classList.add('no-show');
-        _this.addingNewBook = true;
-        _this.handleNewBookCardButtons(_this);
-      }
-
-      App.prototype.hideNewBookCard = function(_this) {
-        let newBookCard = _this.bookShelf.querySelector('.new-book');
-        _this.bookShelf.removeChild(newBookCard);
-        _this.newBookBtn.classList.remove('no-show');
-        _this.addingNewBook = false;
-      }
-
-      App.prototype.toggleNewBookCard = function(_this) {
-        if(_this.bookShelf.querySelector('.new-book')) {
-          _this.hideNewBookCard(_this);
-        } else {
-          _this.showNewBookCard(_this);
-        }
-      }
-
-      App.prototype.newBookButtonEvent = function() {
-        let _this = this;
-        _this.newBookBtn.addEventListener('click', () => _this.toggleNewBookCard(_this));   
-      }      
-
-      App.prototype.removeBookButtonEvent = function() {
-        let removeBookButtons = this.bookShelf.querySelectorAll(".book-remove");
-        _this = this;
-        removeBookButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
-            _this.render();
           });
-        });
-      }  
 
-      App.prototype.handleEditBookButtons = function(_this) {
-        // Handle save button
-        let saveEditBookBtn = document.querySelector('#btn-editBook-save');
-        saveEditBookBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          let newBook = new Book(document.querySelector("#edit-title").value,
-                                 document.querySelector("#edit-author").value,
-                                 document.querySelector("#edit-pages").value,
-                                 document.querySelector("#edit-readornot").checked);
-          newBook.editing = false; 
+          let shelves = this.bookShelf.querySelectorAll(".shelf");
+          shelves.forEach(shelf => {
+            this.bookShelf.removeChild(shelf);
+          });
+        }
 
-          if(_this.validateBook(_this, newBook)) {
-            myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')] = newBook;
-            _this.render();
-          }
-          
-        });
-        
-        // Handle cancel button
-        let cancelEditBookBtn = document.querySelector('#btn-editBook-cancel');
-        cancelEditBookBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
-          _this.render();
-        }); 
-      }    
+        render() {
+          this.clearBookShelf();
 
-      App.prototype.editButtonEvent = function() {
-        let editBookButtons = this.bookShelf.querySelectorAll(".book-edit");
-        _this = this;
-        editBookButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            let i = 0;
-            myLibrary.forEach(book => {
-              if(i === +e.target.parentElement.getAttribute('data-id')) {
-                myLibrary[i].editing = true;                                
+          for(let i = myLibrary.length - 1; i >= 0; i--) {
+            let book = document.createElement('li');
+            book.setAttribute('data-id', i);
+            book.classList.add('book');
+            book.classList.add('book-center');
+            if(!myLibrary[i].editing) {
+              book.innerHTML = 
+                  `<p class="book-remove no-show">Remove</p>
+                  <h3>${myLibrary[i].title}</h3>
+                  <p>by <i>${myLibrary[i].author}</i></p>
+                  <p>${myLibrary[i].pages} pages</p>`;
+              if(myLibrary[i].read) {
+                  book.innerHTML += `<span class="grn">Read ✅</span>`;
               } else {
-                myLibrary[i].editing = false;
+                  book.innerHTML += `<span class="red">Not read yet ❌</span>`;
               }
-              i++;
-            });
-            _this.render();
-            _this.handleEditBookButtons(_this);
+              book.innerHTML += `<button class="book-edit no-show">Edit</button>`;
+            } else {
+              book.classList.add('book-editing');              
+              book.innerHTML = 
+              `<h3>Edit book</h3>
+              <form id="new-book-form">
+                <label for="title">Book Title: </label>
+                <input type="text" id="edit-title" value="${myLibrary[i].title}" required>
+                <label for="author">Author: </label>
+                <input type="text" id="edit-author" value="${myLibrary[i].author}" required>
+                <label for="pages">Pages: </label>
+                <input type="number" id="edit-pages" value="${myLibrary[i].pages}" required>
+                <label for="readornot">Read yet? </label>
+                <input type="checkbox" id="edit-readornot" ${myLibrary[i].read ? "checked" : ""}>
+                <div class="form-buttons">
+                  <button type="submit" id="btn-editBook-save">Save</button>
+                  <button type="submit" id="btn-editBook-cancel">Cancel</button>
+                </div>
+              </form>`;
+            }
+
+            let shelf = document.createElement('li');
+            shelf.classList.add('shelf');
+            if(i === myLibrary.length - 1 && (myLibrary.length % 5) === 0) {
+              this.bookShelf.prepend(shelf);
+            } else if(i === myLibrary.length - 1 && (myLibrary.length % 5) !== 0) {
+              this.bookShelf.prepend(shelf);    
+            } else if((i + 1) % 5 === 0 && i > 0) {
+              this.bookShelf.prepend(shelf);  
+            }
+            
+            this.bookShelf.prepend(book);
+          }
+
+          this.editButtonEvent();
+          this.removeBookButtonEvent();
+          this.updateBookCount();
+          saveLibrary();
+        }
+
+
+        validateBook(book) {
+            if(book.title && book.title.length > 0) {
+              if(book.author && book.author.length > 0) {
+                if(book.pages && +book.pages >= 0) {
+                  return true;
+                }
+              }
+            }
+            return false;
+        }
+
+        handleNewBookCardButtons() {
+          // Handle confirm button
+          let confirmNewBookBtn = document.querySelector('#btn-newBook');
+          confirmNewBookBtn.addEventListener('click', e => {
+            e.preventDefault();
+            let newBook = new Book(document.querySelector("#title").value,
+                                  document.querySelector("#author").value,
+                                  document.querySelector("#pages").value,
+                                  document.querySelector("#readornot").checked);                                 
+            if(this.validateBook(newBook)) {
+              addBookToLibrary(newBook);
+              this.addingNewBook = false;
+              this.render();         
+              this.newBookBtn.classList.remove('no-show');  
+            }          
           });
-        });
+          
+          // Handle cancel button
+          let cancelNewBookBtn = document.querySelector('#btn-cancel');
+          cancelNewBookBtn.addEventListener('click', () => this.toggleNewBookCard(this)); 
+        }
+
+        showNewBookCard() {
+          let newBookCard = document.createElement('li');
+          newBookCard.classList.add('book');
+          newBookCard.classList.add('new-book');
+          newBookCard.classList.add('book-center');
+          newBookCard.innerHTML = 
+              `<h3>Add new book</h3>
+              <form id="new-book-form">
+                <label for="title">Book Title: </label>
+                <input type="text" id="title" value="" required>
+                <label for="author">Author: </label>
+                <input type="text" id="author" value="" required>
+                <label for="pages">Pages: </label>
+                <input type="number" id="pages" value="" required>
+                <label for="readornot">Read yet? </label>
+                <input type="checkbox" id="readornot">
+                <div class="form-buttons">
+                  <button type="submit" id="btn-newBook">Add</button>
+                  <button type="submit" id="btn-cancel">Cancel</button>
+                </div>
+              </form>`;
+          this.bookShelf.appendChild(newBookCard);
+          this.newBookBtn.classList.add('no-show');
+          this.addingNewBook = true;
+          this.handleNewBookCardButtons();
+        }
+
+        hideNewBookCard() {
+          let newBookCard = this.bookShelf.querySelector('.new-book');
+          this.bookShelf.removeChild(newBookCard);
+          this.newBookBtn.classList.remove('no-show');
+          this.addingNewBook = false;
+        }
+
+        toggleNewBookCard() {
+          if(this.bookShelf.querySelector('.new-book')) {
+            this.hideNewBookCard();
+          } else {
+            this.showNewBookCard();
+          }
+        }
+
+        newBookButtonEvent() {
+          this.newBookBtn.addEventListener('click', () => this.toggleNewBookCard());   
+        }      
+
+        removeBookButtonEvent() {
+          let removeBookButtons = this.bookShelf.querySelectorAll(".book-remove");
+          removeBookButtons.forEach(button => {
+            button.addEventListener('click', e => {
+              removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
+              this.render();
+            });
+          });
+        }  
+
+        handleEditBookButtons() {
+          // Handle save button
+          let saveEditBookBtn = document.querySelector('#btn-editBook-save');
+          saveEditBookBtn.addEventListener('click', e => {
+            e.preventDefault();
+            let newBook = new Book(document.querySelector("#edit-title").value,
+                                  document.querySelector("#edit-author").value,
+                                  document.querySelector("#edit-pages").value,
+                                  document.querySelector("#edit-readornot").checked);
+            newBook.editing = false; 
+
+            if(this.validateBook(newBook)) {
+              myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')] = newBook;
+              this.render();
+            }
+            
+          });
+          
+          // Handle cancel button
+          let cancelEditBookBtn = document.querySelector('#btn-editBook-cancel');
+          cancelEditBookBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].editing = false;
+            this.render();
+          }); 
+        }    
+
+        editButtonEvent() {
+          let editBookButtons = this.bookShelf.querySelectorAll(".book-edit");
+          editBookButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+              let i = 0;
+              myLibrary.forEach(book => {
+                if(i === +e.target.parentElement.getAttribute('data-id')) {
+                  myLibrary[i].editing = true;                                
+                } else {
+                  myLibrary[i].editing = false;
+                }
+                i++;
+              });
+              this.render();
+              this.handleEditBookButtons(this);
+            });
+          });
+        }
       }
+
 
       let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
@@ -323,8 +321,8 @@
       addBookToLibrary(test11);
       
       loadLibrary();
+
       let app = new App();
-      app.init();      
       app.render();
       app.newBookButtonEvent();
       app.editButtonEvent();
