@@ -28,6 +28,8 @@
             </form>
           </li>-->
         </ul>
+
+        <h1 id="loading" style="text-align: center;">Loading your library, please wait...</h1>
         
         <div class="add-book">
           <button id="btn-addBook">Add Book</button>
@@ -56,21 +58,9 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
 
-      function isSignedIn() {
-        var user = firebase.auth().currentUser;
-        if (user) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+      var db = firebase.firestore();
       
-      if(!isSignedIn()) {
-        window.location.href = "./login.html";
-      }
-
-
-
+      var user;
 
       let myLibrary = [];
 
@@ -84,7 +74,24 @@
       }
 
       function addBookToLibrary(book) {
-        myLibrary.push(book);
+        let index = myLibrary.push(book);        
+        db.collection("books").add({
+            title: book.title,
+            author: book.author,
+            pages: book.pages,
+            read: book.read,
+            editing: book.editing,
+            hovering: book.hovering,
+            email: user.email,
+        })
+        .then(function(docRef) {
+            console.log("Document successfully written! ID:");
+            myLibrary[index - 1].id = docRef.id;
+            console.log(myLibrary[index - 1].id + " " + myLibrary[index - 1].title);
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
       }
 
       function removeBookFromLibrary(index) {
@@ -92,16 +99,45 @@
       }
 
       function saveLibrary() {
-        localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+        //localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
       }
 
       function loadLibrary() {
-        if(localStorage.getItem('myLibrary') !== null) {
+        return new Promise((resolve, reject) => {
+          db.collection("books").where("email", "==", user.email)
+          .get()
+          .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  myLibrary.push(Object.assign(doc.data(), {
+                    id: doc.id
+                  }));
+              });
+              console.log(myLibrary);
+              resolve();
+          });
+
+
+          /*db.collection("books").get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  myLibrary.push(Object.assign(doc.data(), {
+                    id: doc.id
+                  }));
+              });
+              console.log(myLibrary);
+              resolve();
+          });*/
+        })
+      }
+
+        /*if(localStorage.getItem('myLibrary') !== null) {
           myLibrary = JSON.parse(localStorage.getItem('myLibrary'));
         } else {
           myLibrary = [];
-        }        
-      }
+        }  */  
+
+        
+
+        
 
 
       class App {
@@ -192,7 +228,6 @@
           saveLibrary();
         }
 
-
         validateBook(book) {
             if(book.title && book.title.length > 0) {
               if(book.author && book.author.length > 0) {
@@ -274,10 +309,18 @@
 
         removeBookButtonEvent() {
           let removeBookButtons = this.bookShelf.querySelectorAll(".book-remove");
+          let _this = this;
           removeBookButtons.forEach(button => {
             button.addEventListener('click', e => {
-              removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
-              this.render();
+              let idToDelete = myLibrary[+e.target.parentElement.getAttribute('data-id')].id;
+              
+              db.collection("books").doc(idToDelete).delete().then(function() {
+                console.log("Document successfully deleted!");
+                removeBookFromLibrary(+e.target.parentElement.getAttribute('data-id'));
+                _this.render();
+              }).catch(function(error) {
+                console.error("Error removing document: ", error);
+              });      
             });
           });
         }  
@@ -292,9 +335,29 @@
                                   document.querySelector("#edit-pages").value,
                                   document.querySelector("#edit-readornot").checked);
             newBook.editing = false; 
+            newBook.id = myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].id;
+            newBook.email = myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].email;
 
             if(this.validateBook(newBook)) {
               myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')] = newBook;
+
+              db.collection("books").doc(myLibrary[e.target.parentElement.parentElement.parentElement.getAttribute('data-id')].id).set({
+                  title: newBook.title,
+                  author: newBook.author,
+                  pages: newBook.pages,
+                  read: newBook.read,
+                  editing: newBook.editing,
+                  hovering: newBook.hovering,
+                  email: newBook.email,
+              })
+              .then(function(docRef) {
+                  console.log("Document successfully edited!");
+              })
+              .catch(function(error) {
+                  console.error("Error writing document: ", error);
+              });
+
+              
               this.render();
             }
             
@@ -330,7 +393,7 @@
       }
 
 
-      let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
+      /*let test1 = new Book("The Last Kingdom", "Bernard Cornwell", 415, true);
       let test2 = new Book("How to Win Friends and Influence People", "Dale Carnegie", 268, false);
       let test3 = new Book("Atomic Habits", "James Clear", 320, false);
       let test4 = new Book("Not a Diet Book", "James Smith", 304, true);
@@ -352,14 +415,38 @@
       addBookToLibrary(test8);
       addBookToLibrary(test9);
       addBookToLibrary(test10);
-      addBookToLibrary(test11);
-      
-      loadLibrary();
+      addBookToLibrary(test11);*/
 
-      let app = new App();
-      app.render();
-      app.newBookButtonEvent();
-      app.editButtonEvent();
+
+      // Confirm the link is a sign-in with email link.
+      if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+         var email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+          window.location.href = "./login.html";
+        }
+        firebase.auth().signInWithEmailLink(email, window.location.href)
+          .then((result) => {
+             window.localStorage.removeItem('emailForSignIn');
+             user = result.user;
+             console.log(result.user);
+
+             let app = new App();
+              app.render();
+              app.newBookButtonEvent();
+              app.editButtonEvent();
+
+              loadLibrary().then(() => {
+                app.render();
+                document.querySelector("#loading").style.display = "none";
+              });
+          })
+          .catch((error) => {
+            console.log('Login error.');
+          });
+      }
+    
+
+      
 
       
     </script>
