@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <title>Your Library</title>
+    </head>
+    <body>
+      <header>
+        <h1>Your Library</h1>
+        <p>Please enter your email address to retrieve an email sign-in link.</p>
+        <p>If you're a new user, your books will be associated with this email address.</p>
+      </header>
+
+      <main>
+        <form style="text-align: center;" onsubmit="">
+          <label for="email-login">
+            <input type="text" name="email-login" id="email-login">
+            <input type="submit" value="Request Login Link">
+          </label>
+        </form>       
+        <p id="error" style="text-align: center; color: red; margin-top: 10px;"></p>
+      </main>
+     
+    </body>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
+
+     <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+
+    <script>
+     // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAL8e_y0PKdVXFhgOuqMB0nZpm0xkSgpSw",
+        authDomain: "library-a418b.firebaseapp.com",
+        projectId: "library-a418b",
+        storageBucket: "library-a418b.appspot.com",
+        messagingSenderId: "763948605396",
+        appId: "1:763948605396:web:7de0a960d14092067d8041"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      function isSignedIn() {
+        var user = firebase.auth().currentUser;
+        if (user) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      var actionCodeSettings = {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be in the authorized domains list in the Firebase Console.
+        url: 'https://www.example.com/finishSignUp?cartId=1234',
+        // This must be true.
+        handleCodeInApp: true,
+        iOS: {
+          bundleId: 'com.example.ios'
+        },
+        android: {
+          packageName: 'com.example.android',
+          installApp: true,
+          minimumVersion: '12'
+        },
+        dynamicLinkDomain: 'example.page.link'
+      };
+
+      document.querySelector('form').addEventListener('submit', e => {
+        e.preventDefault();
+        let email = document.querySelector('#email-login').value;
+        firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+        .then(() => {
+          // The link was successfully sent. Inform the user.
+          // Save the email locally so you don't need to ask the user for it again
+          // if they open the link on the same device.
+          window.localStorage.setItem('emailForSignIn', email);
+          console.log('Logged in successfully!');
+          // ...
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          document.querySelector('#error').innerHTML = `Error: ${errorMessage}`;
+          // ...
+        });
+      })
+
+      
+
+      
+
+      
+    </script>
+</html>

@@ -37,7 +37,41 @@
      
     </body>
 
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
+
+     <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+
     <script>
+     // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAL8e_y0PKdVXFhgOuqMB0nZpm0xkSgpSw",
+        authDomain: "library-a418b.firebaseapp.com",
+        projectId: "library-a418b",
+        storageBucket: "library-a418b.appspot.com",
+        messagingSenderId: "763948605396",
+        appId: "1:763948605396:web:7de0a960d14092067d8041"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      function isSignedIn() {
+        var user = firebase.auth().currentUser;
+        if (user) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      
+      if(!isSignedIn()) {
+        window.location.href = "./login.html";
+      }
+
+
+
+
       let myLibrary = [];
 
       function Book(title, author, pages, read) {
